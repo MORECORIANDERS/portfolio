@@ -1,11 +1,11 @@
 export const SITE = {
-  name: 'ALLEN',
+  name: '阿城',
   tagline: '项目档案',
-  title: 'ALLEN · 项目档案',
+  title: '阿城 · 项目档案',
   description:
-    'ALLEN 的个人项目作品集 —— 一座持续生长的项目档案库，记录每一个从想法到落地的作品。',
-  author: 'ALLEN',
-  email: 'hello@morecorianders.dev',
+    '阿城的个人项目作品集 —— 一座持续生长的项目档案库，记录每一个从想法到落地的作品。',
+  author: '阿城',
+  email: 'huocheng.mx@icloud.com',
   github: 'https://github.com/MORECORIANDERS',
   location: '中国 · 远程',
 };
