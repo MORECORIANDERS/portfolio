@@ -1,0 +1,335 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ALLEN · 项目档案 — 样板预览</title>
+
+    <!-- 主题：首屏前应用，避免闪烁 (FOUC) -->
+    <script>
+      (function () {
+        try {
+          var stored = localStorage.getItem('theme');
+          var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+          var theme = stored || (prefersDark ? 'dark' : 'light');
+          document.documentElement.setAttribute('data-theme', theme);
+        } catch (e) {
+          document.documentElement.setAttribute('data-theme', 'light');
+        }
+      })();
+    </script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..600;1,9..144,300..500&family=Manrope:wght@300..600&family=JetBrains+Mono:wght@400;500&family=Noto+Sans+SC:wght@300..600&family=Noto+Serif+SC:wght@300..600&display=swap"
+      rel="stylesheet"
+    />
+
+    <style>
+      /* ===== 设计令牌：白天 ===== */
+      :root {
+        --bg: #f6f3ee; --bg-elev: #fbf9f5; --bg-sunken: #efebe3;
+        --ink: #1c1b19; --ink-soft: #6b655c; --ink-faint: #9a948a;
+        --accent: #9a7b4f; --accent-strong: #6e5532; --accent-contrast: #fbf9f5;
+        --line: rgba(28,27,25,0.12); --line-strong: rgba(28,27,25,0.22);
+        --font-serif: "Fraunces","Noto Serif SC",Georgia,serif;
+        --font-sans: "Manrope","Noto Sans SC",system-ui,sans-serif;
+        --font-mono: "JetBrains Mono",ui-monospace,monospace;
+        --container: 1200px; --reading: 70ch;
+        --ease: cubic-bezier(0.22,1,0.36,1); --dur: 0.45s;
+        color-scheme: light;
+      }
+      /* ===== 黑夜 ===== */
+      [data-theme="dark"] {
+        --bg: #121114; --bg-elev: #1a1a1f; --bg-sunken: #0d0d10;
+        --ink: #ece7de; --ink-soft: #8a847a; --ink-faint: #5f5a52;
+        --accent: #b89366; --accent-strong: #d4ae7a; --accent-contrast: #1a1a1f;
+        --line: rgba(236,231,222,0.12); --line-strong: rgba(236,231,222,0.22);
+        color-scheme: dark;
+      }
+
+      *,*::before,*::after { box-sizing: border-box; margin: 0; padding: 0; }
+      html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
+      body {
+        font-family: var(--font-sans); background: var(--bg); color: var(--ink);
+        line-height: 1.65; font-size: clamp(16px, 0.95rem + 0.3vw, 18px);
+        -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility;
+        min-height: 100vh; overflow-x: hidden;
+        transition: background-color var(--dur) var(--ease), color var(--dur) var(--ease);
+      }
+      img,svg { display: block; max-width: 100%; }
+      a { color: inherit; text-decoration: none; }
+      button { font: inherit; color: inherit; background: none; border: none; cursor: pointer; }
+      ul,ol { list-style: none; }
+      ::selection { background: var(--accent); color: var(--accent-contrast); }
+
+      h1,h2,h3 { font-family: var(--font-serif); font-weight: 400; line-height: 1.05; letter-spacing: -0.02em; }
+      h1 { font-size: clamp(2.6rem,1.5rem+5vw,5.5rem); font-variation-settings: "opsz" 144,"SOFT" 30; }
+      h2 { font-size: clamp(1.8rem,1.2rem+2vw,3rem); font-variation-settings: "opsz" 96; }
+      .eyebrow { font-family: var(--font-mono); font-size: 0.72rem; letter-spacing: 0.22em; text-transform: uppercase; color: var(--ink-soft); }
+      .serif-italic { font-family: var(--font-serif); font-style: italic; }
+      .accent { color: var(--accent-strong); }
+
+      .container { width: 100%; max-width: var(--container); margin-inline: auto; padding-inline: clamp(1.25rem,5vw,3rem); }
+      .section { padding-block: clamp(4rem,8vw,8rem); }
+
+      .link { position: relative; display: inline-block; transition: color var(--dur) var(--ease); }
+      .link::after { content:""; position:absolute; left:0; bottom:-2px; width:100%; height:1px; background:currentColor; transform:scaleX(0); transform-origin:right; transition:transform var(--dur) var(--ease); }
+      .link:hover { color: var(--accent-strong); }
+      .link:hover::after { transform: scaleX(1); transform-origin: left; }
+
+      .btn { display:inline-flex; align-items:center; gap:0.6em; padding:0.85em 1.6em; border:1px solid var(--accent); border-radius:999px; color:var(--accent-strong); font-family:var(--font-mono); font-size:0.8rem; letter-spacing:0.08em; text-transform:uppercase; transition:background var(--dur) var(--ease),color var(--dur) var(--ease),transform var(--dur) var(--ease); }
+      .btn:hover { background: var(--accent); color: var(--accent-contrast); transform: translateY(-2px); }
+      .btn--solid { background: var(--accent); color: var(--accent-contrast); }
+      .btn--solid:hover { background: var(--accent-strong); }
+
+      .tag { display:inline-flex; align-items:center; font-family:var(--font-mono); font-size:0.7rem; letter-spacing:0.05em; color:var(--ink-soft); padding:0.3em 0.8em; border:1px solid var(--line); border-radius:999px; }
+
+      /* 颗粒噪点 */
+      .grain { position:fixed; inset:0; z-index:1; pointer-events:none; opacity:0.04; mix-blend-mode:multiply;
+        background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); }
+      [data-theme="dark"] .grain { opacity:0.06; mix-blend-mode:screen; }
+
+      /* Header */
+      header.site-header { position:sticky; top:0; z-index:50; backdrop-filter:saturate(1.4) blur(12px); background:color-mix(in srgb,var(--bg) 78%,transparent); border-bottom:1px solid var(--line); transition:background var(--dur) var(--ease),border-color var(--dur) var(--ease); }
+      .header-inner { display:flex; align-items:center; justify-content:space-between; height:72px; }
+      .brand { display:inline-flex; align-items:center; gap:0.6rem; }
+      .brand-mark { color: var(--accent); display:inline-flex; }
+      .brand-name { font-family:var(--font-serif); font-size:1.25rem; letter-spacing:0.04em; }
+      .nav-desktop { display:flex; align-items:center; gap:1.8rem; }
+      .nav-link { font-family:var(--font-mono); font-size:0.8rem; letter-spacing:0.06em; text-transform:uppercase; color:var(--ink-soft); }
+      .nav-link:hover { color: var(--ink); }
+
+      .theme-toggle { display:inline-flex; align-items:center; justify-content:center; width:38px; height:38px; border-radius:999px; color:var(--ink); border:1px solid var(--line); transition:color var(--dur) var(--ease),border-color var(--dur) var(--ease),transform var(--dur) var(--ease); }
+      .theme-toggle:hover { color:var(--accent-strong); border-color:var(--accent); transform:rotate(-12deg); }
+      .icon { transition:opacity var(--dur) var(--ease); }
+      .icon-sun { display:none; }
+      [data-theme="dark"] .icon-sun { display:block; }
+      [data-theme="dark"] .icon-moon { display:none; }
+
+      /* Hero */
+      .hero { position:relative; min-height:clamp(560px,92vh,880px); display:flex; align-items:center; overflow:hidden; padding-block:6rem 4rem; }
+      .hero-glow { position:absolute; inset:0; z-index:0; background:radial-gradient(60% 50% at 78% 18%,color-mix(in srgb,var(--accent) 22%,transparent),transparent 70%),radial-gradient(45% 45% at 12% 85%,color-mix(in srgb,var(--accent) 12%,transparent),transparent 70%); filter:blur(10px); pointer-events:none; }
+      .hero-inner { position:relative; z-index:2; max-width:980px; }
+      .hero-title { margin:1.4rem 0 1.8rem; font-size:clamp(2.8rem,1.4rem+6vw,6rem); line-height:0.98; }
+      .hero-sub { max-width:52ch; font-size:clamp(1.05rem,0.95rem+0.4vw,1.3rem); color:var(--ink-soft); }
+      .hero-actions { display:flex; gap:1rem; flex-wrap:wrap; margin-top:2.4rem; }
+
+      /* 简介区 */
+      .intro-grid { display:grid; grid-template-columns:0.5fr 2fr 1fr; gap:2.5rem; align-items:start; border-top:1px solid var(--line); padding-top:clamp(3rem,6vw,5rem); }
+      .intro-text p { font-family:var(--font-serif); font-size:clamp(1.4rem,1.1rem+1.2vw,2.1rem); line-height:1.4; }
+      .intro-meta { display:flex; flex-direction:column; gap:1.1rem; }
+      .intro-meta div { display:flex; justify-content:space-between; gap:1rem; border-bottom:1px solid var(--line); padding-bottom:0.6rem; }
+      .intro-meta dt { font-family:var(--font-mono); font-size:0.7rem; letter-spacing:0.08em; text-transform:uppercase; color:var(--ink-faint); }
+      .intro-meta dd { font-family:var(--font-mono); font-size:0.82rem; }
+
+      /* 作品网格 */
+      .section-head { margin-bottom:clamp(2.5rem,5vw,4rem); max-width:640px; }
+      .section-head h2 { margin:0.8rem 0 0.8rem; }
+      .section-lead { color: var(--ink-soft); }
+      .projects-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:clamp(2rem,4vw,3.5rem) clamp(1.5rem,3vw,2.8rem); }
+      .projects-grid.has-featured .card.featured { grid-column: 1 / -1; }
+      .projects-grid.has-featured .card.featured .card-media { aspect-ratio: 21 / 9; }
+
+      .card-media { position:relative; aspect-ratio:16/10; overflow:hidden; background:var(--bg-sunken); border:1px solid var(--line); }
+      .card-media img { width:100%; height:100%; object-fit:cover; transition:transform 0.8s var(--ease),filter var(--dur) var(--ease); filter:saturate(0.96); }
+      .card-media::after { content:""; position:absolute; inset:0; border:1px solid transparent; transition:border-color var(--dur) var(--ease); pointer-events:none; }
+      .card-cta { position:absolute; left:1.1rem; bottom:1.1rem; display:inline-flex; align-items:center; gap:0.5em; padding:0.55em 1.1em; background:color-mix(in srgb,var(--bg) 88%,transparent); backdrop-filter:blur(6px); border:1px solid var(--line); color:var(--ink); font-family:var(--font-mono); font-size:0.72rem; letter-spacing:0.08em; text-transform:uppercase; opacity:0; transform:translateY(8px); transition:opacity var(--dur) var(--ease),transform var(--dur) var(--ease),background var(--dur) var(--ease),color var(--dur) var(--ease); }
+      .card-link { display:block; }
+      .card-link:hover .card-media::after { border-color: var(--accent); }
+      .card-link:hover .card-media img { transform: scale(1.045); filter: saturate(1.04); }
+      .card-link:hover .card-cta { opacity:1; transform:translateY(0); background:var(--accent); color:var(--accent-contrast); border-color:var(--accent); }
+      .card-body { padding-top:1.3rem; }
+      .card-meta { display:flex; align-items:center; gap:0.9rem; flex-wrap:wrap; font-family:var(--font-mono); font-size:0.7rem; letter-spacing:0.06em; color:var(--ink-faint); margin-bottom:0.6rem; }
+      .card-year { color: var(--accent-strong); }
+      .card-tags { display:inline-flex; gap:0.4rem; margin-left:auto; }
+      .card-title { font-size:clamp(1.4rem,1.1rem+1vw,1.9rem); transition:color var(--dur) var(--ease),transform var(--dur) var(--ease); }
+      .card-link:hover .card-title { color: var(--accent-strong); transform: translateX(4px); }
+      .card-desc { margin-top:0.5rem; color:var(--ink-soft); max-width:52ch; }
+
+      /* Footer */
+      .site-footer { border-top:1px solid var(--line); margin-top:clamp(4rem,10vw,9rem); padding-block:clamp(2.5rem,6vw,4rem) 2rem; position:relative; z-index:2; }
+      .footer-inner { display:flex; justify-content:space-between; align-items:flex-end; gap:2rem; flex-wrap:wrap; }
+      .footer-lead { font-size:clamp(1.3rem,1rem+1.5vw,2rem); color:var(--ink-soft); margin-bottom:0.4rem; }
+      .footer-mail { font-family:var(--font-mono); font-size:0.9rem; }
+      .footer-nav { display:flex; gap:1.6rem; font-family:var(--font-mono); font-size:0.8rem; }
+      .footer-bottom { margin-top:2.5rem; padding-top:1.5rem; border-top:1px solid var(--line); display:flex; justify-content:space-between; gap:1rem; flex-wrap:wrap; font-family:var(--font-mono); font-size:0.72rem; color:var(--ink-faint); }
+
+      /* 入场 */
+      [data-reveal] { opacity:0; transform:translateY(18px); transition:opacity 0.8s var(--ease),transform 0.8s var(--ease); transition-delay:var(--reveal-delay,0ms); }
+      [data-reveal].is-visible { opacity:1; transform:none; }
+      @media (prefers-reduced-motion: reduce) { *{transition-duration:0.01ms!important;} [data-reveal]{opacity:1;transform:none;} }
+
+      .preview-note { background:var(--bg-sunken); border-bottom:1px solid var(--line); padding:0.6rem 1rem; text-align:center; font-family:var(--font-mono); font-size:0.7rem; letter-spacing:0.06em; color:var(--ink-soft); }
+
+      @media (max-width: 900px){ .intro-grid{grid-template-columns:1fr;gap:1.6rem;} }
+      @media (max-width: 720px){ .projects-grid{grid-template-columns:1fr;} .hero-actions .btn{flex:1;justify-content:center;} }
+    </style>
+  </head>
+  <body>
+    <div class="grain" aria-hidden="true"></div>
+
+    <div class="preview-note">样板预览 · 这是一个独立的单页 HTML 样板，用于预览设计效果（非完整站点）</div>
+
+    <header class="site-header">
+      <div class="container header-inner">
+        <a class="brand" href="#">
+          <span class="brand-mark" aria-hidden="true">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+              <path d="M7 1L13 7L7 13L1 7L7 1Z" stroke="currentColor" stroke-width="1.2"/>
+              <path d="M7 4.5L9.5 7L7 9.5L4.5 7L7 4.5Z" fill="currentColor"/>
+            </svg>
+          </span>
+          <span class="brand-name">ALLEN</span>
+        </a>
+        <nav class="nav-desktop">
+          <a class="nav-link link" href="#work">作品</a>
+          <a class="nav-link link" href="#about">关于</a>
+          <button class="theme-toggle" aria-label="切换昼夜主题" id="themeToggle">
+            <svg class="icon icon-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+            <svg class="icon icon-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4.2"/><path d="M12 2v2.4M12 19.6V22M2 12h2.4M19.6 12H22M4.9 4.9l1.7 1.7M17.4 17.4l1.7 1.7M19.1 4.9l-1.7 1.7M6.6 17.4l-1.7 1.7"/></svg>
+          </button>
+        </nav>
+      </div>
+    </header>
+
+    <main>
+      <!-- Hero -->
+      <section class="hero">
+        <div class="hero-glow" aria-hidden="true"></div>
+        <div class="container hero-inner">
+          <p class="eyebrow" data-reveal>项目档案 · Portfolio · 2026</p>
+          <h1 class="hero-title" data-reveal style="--reveal-delay:80ms">
+            构想，<span class="serif-italic accent">落地</span>，<br/>再沉淀为<span class="serif-italic accent">作品</span>。
+          </h1>
+          <p class="hero-sub" data-reveal style="--reveal-delay:200ms">
+            我是 ALLEN，一名独立开发者与设计实践者。这里收录我亲手做过的项目 ——
+            从一行代码到完整产品，每个都有自己的故事。
+          </p>
+          <div class="hero-actions" data-reveal style="--reveal-delay:320ms">
+            <a class="btn btn--solid" href="#work">浏览作品</a>
+            <a class="btn" href="#about">关于我</a>
+          </div>
+        </div>
+      </section>
+
+      <!-- 简介 -->
+      <section class="section" style="padding-top:0">
+        <div class="container intro-grid">
+          <p class="eyebrow" data-reveal>关于</p>
+          <div class="intro-text" data-reveal style="--reveal-delay:80ms">
+            <p>我相信好的作品是<span class="serif-italic">克制</span>与<span class="serif-italic">精确</span>的结果 —— 去掉一切多余，让真正重要的东西浮现。</p>
+          </div>
+          <dl class="intro-meta" data-reveal style="--reveal-delay:160ms">
+            <div><dt>所在地</dt><dd>中国 · 远程</dd></div>
+            <div><dt>作品数</dt><dd>04</dd></div>
+            <div><dt>状态</dt><dd>持续更新中</dd></div>
+          </dl>
+        </div>
+      </section>
+
+      <!-- 作品 -->
+      <section class="section" id="work">
+        <div class="container">
+          <header class="section-head" data-reveal>
+            <p class="eyebrow">Selected Work</p>
+            <h2>精选作品</h2>
+            <p class="section-lead">点击任一项目，进入它的完整介绍页。</p>
+          </header>
+          <div class="projects-grid has-featured">
+            <!-- CB Report（featured） -->
+            <article class="card featured" data-reveal>
+              <a class="card-link" href="https://morecorianders.github.io/cbreport-web/" target="_blank" rel="noopener noreferrer">
+                <div class="card-media">
+                  <img src="https://morecorianders.github.io/portfolio/projects/cbreport-web/cover.svg" alt="可转债日报界面" loading="lazy"/>
+                  <span class="card-cta">查看详情 →</span>
+                </div>
+                <div class="card-body">
+                  <div class="card-meta">
+                    <span class="card-year">2025</span>
+                    <span>全栈开发 · 数据管道</span>
+                    <span class="card-tags"><span class="tag">金融</span><span class="tag">自动化</span></span>
+                  </div>
+                  <h3 class="card-title">可转债日报 CB Report</h3>
+                  <p class="card-desc">每日自动更新的可转债市场数据日报 —— 市场概况、价格与行业分布、涨跌幅与成交额榜单一目了然。</p>
+                </div>
+              </a>
+            </article>
+            <!-- Aurora -->
+            <article class="card" data-reveal style="--reveal-delay:90ms">
+              <a class="card-link" href="#">
+                <div class="card-media">
+                  <img src="https://morecorianders.github.io/portfolio/projects/aurora-dashboard/cover.svg" alt="Aurora 看板" loading="lazy"/>
+                  <span class="card-cta">查看详情 →</span>
+                </div>
+                <div class="card-body">
+                  <div class="card-meta">
+                    <span class="card-year">2025</span>
+                    <span>设计 · 全栈开发</span>
+                    <span class="card-tags"><span class="tag">数据可视化</span></span>
+                  </div>
+                  <h3 class="card-title">Aurora Dashboard</h3>
+                  <p class="card-desc">面向数据团队的高密度实时指标看板，用克制的视觉承载复杂信息。</p>
+                </div>
+              </a>
+            </article>
+            <!-- Tide -->
+            <article class="card" data-reveal style="--reveal-delay:180ms">
+              <a class="card-link" href="#">
+                <div class="card-media">
+                  <img src="https://morecorianders.github.io/portfolio/projects/tide-forecast-app/cover.svg" alt="潮汐预报应用" loading="lazy"/>
+                  <span class="card-cta">查看详情 →</span>
+                </div>
+                <div class="card-body">
+                  <div class="card-meta">
+                    <span class="card-year">2024</span>
+                    <span>产品设计 · 移动端</span>
+                    <span class="card-tags"><span class="tag">极简</span></span>
+                  </div>
+                  <h3 class="card-title">Tide Forecast App</h3>
+                  <p class="card-desc">为海边生活者打造的极简潮汐预报应用，只显示真正重要的那一刻。</p>
+                </div>
+              </a>
+            </article>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="container footer-inner">
+        <div>
+          <p class="footer-lead serif-italic">有想法或合作意向？</p>
+          <a class="footer-mail link" href="mailto:hello@morecorianders.dev">hello@morecorianders.dev</a>
+        </div>
+        <nav class="footer-nav">
+          <a class="link" href="https://github.com/MORECORIANDERS" target="_blank" rel="noopener noreferrer">GitHub ↗</a>
+          <a class="link" href="mailto:hello@morecorianders.dev">Email</a>
+        </nav>
+      </div>
+      <div class="container footer-bottom">
+        <span>© 2026 ALLEN. All rights reserved.</span>
+        <span>样板预览 · Built with Astro · Hosted on GitHub Pages</span>
+      </div>
+    </footer>
+
+    <script>
+      // 主题切换
+      document.getElementById('themeToggle').addEventListener('click', function () {
+        var root = document.documentElement;
+        var current = root.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
+        var next = current === 'dark' ? 'light' : 'dark';
+        root.setAttribute('data-theme', next);
+        try { localStorage.setItem('theme', next); } catch (e) {}
+      });
+      // 滚动入场
+      var io = new IntersectionObserver(function (entries) {
+        entries.forEach(function (e) {
+          if (e.isIntersecting) { e.target.classList.add('is-visible'); io.unobserve(e.target); }
+        });
+      }, { threshold: 0.12, rootMargin: '0px 0px -8% 0px' });
+      document.querySelectorAll('[data-reveal]').forEach(function (el) { io.observe(el); });
+    </script>
+  </body>
+</html>
