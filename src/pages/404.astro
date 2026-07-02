@@ -1,0 +1,36 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="404 · 未找到">
+  <section class="notfound">
+    <div class="container inner" data-reveal>
+      <p class="eyebrow">Error 404</p>
+      <h1>这一页，<span class="serif-italic accent">尚未书写</span>。</h1>
+      <p class="lead">你访问的页面不存在，或已被移动。回到档案库继续探索吧。</p>
+      <a class="btn btn--solid" href={`${import.meta.env.BASE_URL}`}>返回首页 →</a>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .notfound {
+    min-height: 70vh;
+    display: flex;
+    align-items: center;
+    padding-block: 6rem;
+  }
+  .inner {
+    max-width: 640px;
+  }
+  .inner h1 {
+    margin: 1rem 0 1.2rem;
+    font-size: clamp(2.4rem, 1.5rem + 4vw, 4.2rem);
+  }
+  .accent { color: var(--accent-strong); }
+  .lead {
+    color: var(--ink-soft);
+    margin-bottom: 2rem;
+    font-size: 1.1rem;
+  }
+</style>

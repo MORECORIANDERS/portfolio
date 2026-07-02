@@ -1,0 +1,59 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 1000" width="1600" height="1000" role="img" aria-label="Tide 潮汐预报界面">
+  <defs>
+    <linearGradient id="tide-bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#e7edf1"/>
+      <stop offset="0.55" stop-color="#eef1f0"/>
+      <stop offset="1" stop-color="#f6f3ee"/>
+    </linearGradient>
+    <linearGradient id="tide-area" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#5b7a86" stop-opacity="0.32"/>
+      <stop offset="1" stop-color="#5b7a86" stop-opacity="0.02"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="1600" height="1000" fill="url(#tide-bg)"/>
+
+  <!-- 地平线 / 基准 -->
+  <line x1="0" y1="520" x2="1600" y2="520" stroke="#5b7a86" stroke-opacity="0.12" stroke-width="1" stroke-dasharray="2 8"/>
+  <line x1="0" y1="680" x2="1600" y2="680" stroke="#5b7a86" stroke-opacity="0.08" stroke-width="1"/>
+
+  <!-- 潮位曲线 -->
+  <path d="M0,1000 L0,600 C200,600 300,300 560,300 C820,300 920,760 1180,760 C1380,760 1460,460 1600,460 L1600,1000 Z" fill="url(#tide-area)"/>
+  <path d="M0,600 C200,600 300,300 560,300 C820,300 920,760 1180,760 C1380,760 1460,460 1600,460" fill="none" stroke="#46606b" stroke-width="3" stroke-linecap="round"/>
+
+  <!-- 高潮 / 低潮节点 -->
+  <g>
+    <circle cx="560" cy="300" r="8" fill="#9A7B4F"/>
+    <circle cx="560" cy="300" r="16" fill="none" stroke="#9A7B4F" stroke-opacity="0.35"/>
+    <line x1="560" y1="300" x2="560" y2="240" stroke="#9A7B4F" stroke-opacity="0.4" stroke-width="1"/>
+    <rect x="500" y="206" width="120" height="28" rx="14" fill="#1C1B19"/>
+    <rect x="520" y="218" width="80" height="6" rx="3" fill="#B89366"/>
+  </g>
+  <g>
+    <circle cx="1180" cy="760" r="8" fill="#46606b"/>
+    <circle cx="1180" cy="760" r="16" fill="none" stroke="#46606b" stroke-opacity="0.35"/>
+  </g>
+
+  <!-- 当前位置游标 -->
+  <g>
+    <line x1="980" y1="120" x2="980" y2="820" stroke="#1C1B19" stroke-opacity="0.18" stroke-width="1" stroke-dasharray="3 6"/>
+    <circle cx="980" cy="560" r="6" fill="#1C1B19"/>
+  </g>
+
+  <!-- 顶部信息 -->
+  <g transform="translate(120,120)">
+    <circle cx="0" cy="0" r="6" fill="#9A7B4F"/>
+    <rect x="22" y="-10" width="150" height="20" rx="10" fill="#1C1B19" fill-opacity="0.08"/>
+    <rect x="1180" y="-10" width="180" height="20" rx="10" fill="#1C1B19" fill-opacity="0.06"/>
+  </g>
+
+  <!-- 底部时间刻度 -->
+  <g transform="translate(120,900)" fill="#5b7a86" fill-opacity="0.5">
+    <rect x="0" y="0" width="8" height="8" rx="2"/>
+    <rect x="260" y="0" width="8" height="8" rx="2"/>
+    <rect x="520" y="0" width="8" height="8" rx="2"/>
+    <rect x="780" y="0" width="8" height="8" rx="2"/>
+    <rect x="1040" y="0" width="8" height="8" rx="2"/>
+    <rect x="1300" y="0" width="8" height="8" rx="2"/>
+  </g>
+</svg>

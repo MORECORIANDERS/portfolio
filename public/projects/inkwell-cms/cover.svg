@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 1000" width="1600" height="1000" role="img" aria-label="Inkwell 写作编辑器界面">
+  <defs>
+    <linearGradient id="ink-bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#f8f5ef"/>
+      <stop offset="1" stop-color="#f1ece2"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="1600" height="1000" fill="url(#ink-bg)"/>
+
+  <!-- 巨大装饰引号 -->
+  <text x="1320" y="430" font-family="Georgia, 'Noto Serif SC', serif" font-size="780" fill="#9A7B4F" fill-opacity="0.1">”</text>
+
+  <!-- 左侧页边线 -->
+  <line x1="300" y1="120" x2="300" y2="880" stroke="#9A7B4F" stroke-opacity="0.35" stroke-width="1.5"/>
+
+  <!-- 标题区 -->
+  <g transform="translate(360,150)">
+    <rect x="0" y="0" width="120" height="14" rx="7" fill="#9A7B4F" fill-opacity="0.6"/>
+    <rect x="0" y="40" width="560" height="40" rx="8" fill="#1C1B19" fill-opacity="0.78"/>
+    <rect x="0" y="100" width="380" height="22" rx="8" fill="#1C1B19" fill-opacity="0.25"/>
+  </g>
+
+  <!-- 正文文本行 -->
+  <g transform="translate(360,330)" fill="#1C1B19" fill-opacity="0.16">
+    <rect x="0" y="0"   width="900" height="14" rx="7"/>
+    <rect x="0" y="34"  width="860" height="14" rx="7"/>
+    <rect x="0" y="68"  width="920" height="14" rx="7"/>
+    <rect x="0" y="102" width="780" height="14" rx="7"/>
+    <rect x="0" y="136" width="60"  height="14" rx="7" fill="#9A7B4F" fill-opacity="0.55"/>
+    <rect x="80" y="136" width="820" height="14" rx="7" fill="#1C1B19" fill-opacity="0.16"/>
+    <rect x="0" y="170" width="880" height="14" rx="7"/>
+    <rect x="0" y="204" width="700" height="14" rx="7"/>
+  </g>
+
+  <!-- 段落间隔后第二段 -->
+  <g transform="translate(360,580)" fill="#1C1B19" fill-opacity="0.16">
+    <rect x="0" y="0"   width="910" height="14" rx="7"/>
+    <rect x="0" y="34"  width="840" height="14" rx="7"/>
+    <rect x="0" y="68"  width="620" height="14" rx="7"/>
+    <!-- 光标 -->
+    <rect x="628" y="64" width="3" height="22" fill="#9A7B4F"/>
+  </g>
+
+  <!-- 底部状态条 -->
+  <g transform="translate(360,860)">
+    <rect x="0" y="0" width="8" height="8" rx="2" fill="#9A7B4F"/>
+    <rect x="20" y="-4" width="120" height="12" rx="6" fill="#1C1B19" fill-opacity="0.12"/>
+    <rect x="980" y="-4" width="80" height="12" rx="6" fill="#1C1B19" fill-opacity="0.1"/>
+  </g>
+</svg>

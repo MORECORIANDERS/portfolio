@@ -1,0 +1,144 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import { asset } from '../utils/path';
+
+interface Props {
+  project: CollectionEntry<'projects'>;
+  index?: number;
+  featured?: boolean;
+}
+
+const { project, index = 0, featured = false } = Astro.props;
+const { title, description, cover, coverAlt, tags, pubDate, role } = project.data;
+const href = `${import.meta.env.BASE_URL}projects/${project.id}`;
+const year = pubDate.getFullYear();
+---
+
+<article
+  class:list={['card', { featured }]}
+  data-reveal
+  style={`--reveal-delay:${Math.min(index, 6) * 90}ms`}
+>
+  <a class="card-link" href={href}>
+    <div class="card-media">
+      <img src={asset(cover)} alt={coverAlt} loading="lazy" decoding="async" width="1200" height="750" />
+      <span class="card-cta">
+        查看详情
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+      </span>
+    </div>
+    <div class="card-body">
+      <div class="card-meta">
+        <span class="card-year">{year}</span>
+        {role && <span class="card-role">{role}</span>}
+        <span class="card-tags">
+          {tags.slice(0, 2).map((t) => <span class="tag">{t}</span>)}
+        </span>
+      </div>
+      <h3 class="card-title">{title}</h3>
+      <p class="card-desc">{description}</p>
+    </div>
+  </a>
+</article>
+
+<style>
+  .card {
+    position: relative;
+  }
+  .card-link {
+    display: block;
+    color: inherit;
+  }
+  .card-media {
+    position: relative;
+    aspect-ratio: 16 / 10;
+    overflow: hidden;
+    background: var(--bg-sunken);
+    border: 1px solid var(--line);
+  }
+  .card-media img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.8s var(--ease), filter var(--dur) var(--ease);
+    filter: saturate(0.96);
+  }
+  .card-media::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border: 1px solid transparent;
+    transition: border-color var(--dur) var(--ease);
+    pointer-events: none;
+  }
+  .card-cta {
+    position: absolute;
+    left: 1.1rem;
+    bottom: 1.1rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5em;
+    padding: 0.55em 1.1em;
+    background: color-mix(in srgb, var(--bg) 88%, transparent);
+    backdrop-filter: blur(6px);
+    border: 1px solid var(--line);
+    color: var(--ink);
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    opacity: 0;
+    transform: translateY(8px);
+    transition: opacity var(--dur) var(--ease), transform var(--dur) var(--ease),
+      background var(--dur) var(--ease), color var(--dur) var(--ease);
+  }
+  .card-link:hover .card-media::after {
+    border-color: var(--accent);
+  }
+  .card-link:hover .card-media img {
+    transform: scale(1.045);
+    filter: saturate(1.04);
+  }
+  .card-link:hover .card-cta {
+    opacity: 1;
+    transform: translateY(0);
+    background: var(--accent);
+    color: var(--accent-contrast);
+    border-color: var(--accent);
+  }
+  .card-body {
+    padding-top: 1.3rem;
+  }
+  .card-meta {
+    display: flex;
+    align-items: center;
+    gap: 0.9rem;
+    flex-wrap: wrap;
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.06em;
+    color: var(--ink-faint);
+    margin-bottom: 0.6rem;
+  }
+  .card-year {
+    color: var(--accent-strong);
+  }
+  .card-tags {
+    display: inline-flex;
+    gap: 0.4rem;
+    margin-left: auto;
+  }
+  .card-title {
+    font-size: clamp(1.4rem, 1.1rem + 1vw, 1.9rem);
+    transition: color var(--dur) var(--ease), transform var(--dur) var(--ease);
+  }
+  .card-link:hover .card-title {
+    color: var(--accent-strong);
+    transform: translateX(4px);
+  }
+  .card-desc {
+    margin-top: 0.5rem;
+    color: var(--ink-soft);
+    max-width: 52ch;
+  }
+</style>

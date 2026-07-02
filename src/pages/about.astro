@@ -1,0 +1,233 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { SITE } from '../consts';
+
+const skills = [
+  { group: '前端', items: ['React', 'TypeScript', 'Astro', 'Vue', 'Tailwind'] },
+  { group: '后端', items: ['Node.js', 'Python', 'PostgreSQL', 'Redis', 'Docker'] },
+  { group: '设计', items: ['Figma', '排版与字体', '设计系统', '动效'] },
+];
+
+const timeline = [
+  { year: '2024 — 至今', title: '独立开发', desc: '专注于产品级 Web 应用与设计实践。' },
+  { year: '2021 — 2024', title: '高级前端工程师', desc: '主导多个数据可视化与 SaaS 产品的前端架构。' },
+  { year: '2018 — 2021', title: '全栈开发', desc: '从 0 到 1 搭建若干 Web 产品与内部工具。' },
+];
+---
+
+<BaseLayout title="关于" description={`关于 ${SITE.author} —— 独立开发者与设计实践者。`}>
+  <section class="section about-hero">
+    <div class="container">
+      <p class="eyebrow" data-reveal>关于</p>
+      <h1 data-reveal style="--reveal-delay:80ms">
+        做值得被<span class="serif-italic accent">记住</span>的东西。
+      </h1>
+    </div>
+  </section>
+
+  <section class="section about-body">
+    <div class="container about-grid">
+      <div class="about-text" data-reveal>
+        <p>
+          你好，我是 {SITE.author}。一名独立开发者，也是设计的长期信徒。
+        </p>
+        <p>
+          我相信软件应当既好用又好看 —— 功能与美学不是取舍关系，而是互相成就。
+          过去几年，我从数据可视化做到内容产品，从一行命令行脚本做到完整 SaaS，
+          始终在追求一件事：把模糊的想法，精确地变成可触碰的产品。
+        </p>
+        <p>
+          工作之外，我喜欢研究字体排印、阅读长文、写一些没人看的笔记。
+          如果你正在做有趣的事，欢迎写信。
+        </p>
+      </div>
+
+      <aside class="about-side" data-reveal style="--reveal-delay:120ms">
+        <div class="side-row"><span class="meta-label">所在地</span><span>{SITE.location}</span></div>
+        <div class="side-row"><span class="meta-label">GitHub</span><a class="link" href={SITE.github} target="_blank" rel="noopener noreferrer">MORECORIANDERS ↗</a></div>
+        <div class="side-row"><span class="meta-label">邮箱</span><a class="link" href={`mailto:${SITE.email}`}>{SITE.email}</a></div>
+      </aside>
+    </div>
+  </section>
+
+  <section class="section skills-section">
+    <div class="container">
+      <header class="section-head" data-reveal>
+        <p class="eyebrow">技能矩阵</p>
+        <h2>我擅长的</h2>
+      </header>
+      <div class="skills-grid">
+        {skills.map((s, i) => (
+          <div class="skill-card" data-reveal style={`--reveal-delay:${i * 80}ms`}>
+            <h3 class="skill-group">{s.group}</h3>
+            <ul class="skill-items">
+              {s.items.map((it) => <li>{it}</li>)}
+            </ul>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="section timeline-section">
+    <div class="container">
+      <header class="section-head" data-reveal>
+        <p class="eyebrow">经历</p>
+        <h2>时间线</h2>
+      </header>
+      <ol class="timeline">
+        {timeline.map((t, i) => (
+          <li class="timeline-item" data-reveal style={`--reveal-delay:${i * 80}ms`}>
+            <span class="timeline-dot" aria-hidden="true"></span>
+            <span class="timeline-year">{t.year}</span>
+            <div class="timeline-content">
+              <h3 class="timeline-title">{t.title}</h3>
+              <p class="timeline-desc">{t.desc}</p>
+            </div>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  <section class="section cta-section">
+    <div class="container cta-inner" data-reveal>
+      <p class="serif-italic cta-lead">一起做点什么？</p>
+      <a class="btn btn--solid cta-btn" href={`mailto:${SITE.email}`}>写一封信 →</a>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .about-hero { padding-bottom: 0; }
+  .about-hero h1 {
+    margin-top: 1rem;
+    font-size: clamp(2.4rem, 1.4rem + 4vw, 4.5rem);
+    max-width: 16ch;
+  }
+  .accent { color: var(--accent-strong); }
+
+  .about-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: clamp(2rem, 5vw, 4rem);
+    border-top: 1px solid var(--line);
+    padding-top: clamp(2.5rem, 5vw, 4rem);
+  }
+  .about-text p {
+    font-family: var(--font-serif);
+    font-size: clamp(1.2rem, 1rem + 0.8vw, 1.6rem);
+    line-height: 1.55;
+    margin-bottom: 1.2rem;
+    color: var(--ink);
+  }
+  .about-side {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+  .side-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    padding-bottom: 0.7rem;
+    border-bottom: 1px solid var(--line);
+    font-family: var(--font-mono);
+    font-size: 0.82rem;
+  }
+  .meta-label {
+    color: var(--ink-faint);
+    font-size: 0.7rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .section-head { margin-bottom: clamp(2rem, 4vw, 3rem); }
+  .section-head h2 { margin-top: 0.7rem; }
+
+  .skills-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+  }
+  .skill-card {
+    border: 1px solid var(--line);
+    padding: clamp(1.4rem, 3vw, 2rem);
+    transition: border-color var(--dur) var(--ease), transform var(--dur) var(--ease);
+  }
+  .skill-card:hover {
+    border-color: var(--accent);
+    transform: translateY(-4px);
+  }
+  .skill-group {
+    font-size: 1.3rem;
+    margin-bottom: 1rem;
+  }
+  .skill-items {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+  .skill-items li {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--ink-soft);
+    padding: 0.3em 0.7em;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+  }
+
+  .timeline {
+    position: relative;
+    padding-left: 1.6rem;
+    border-left: 1px solid var(--line);
+  }
+  .timeline-item {
+    position: relative;
+    padding: 0 0 2.4rem 1.4rem;
+  }
+  .timeline-dot {
+    position: absolute;
+    left: -1.6rem;
+    top: 0.4rem;
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background: var(--accent);
+    box-shadow: 0 0 0 4px var(--bg);
+  }
+  .timeline-year {
+    font-family: var(--font-mono);
+    font-size: 0.74rem;
+    letter-spacing: 0.06em;
+    color: var(--ink-faint);
+  }
+  .timeline-title {
+    margin: 0.3rem 0 0.3rem;
+    font-size: 1.3rem;
+  }
+  .timeline-desc {
+    color: var(--ink-soft);
+    max-width: 52ch;
+  }
+
+  .cta-section { padding-bottom: clamp(4rem, 8vw, 7rem); }
+  .cta-inner {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.6rem;
+    border-top: 1px solid var(--line);
+    padding-top: clamp(3rem, 6vw, 5rem);
+  }
+  .cta-lead {
+    font-size: clamp(1.6rem, 1.2rem + 2vw, 2.6rem);
+    color: var(--ink);
+  }
+
+  @media (max-width: 860px) {
+    .about-grid { grid-template-columns: 1fr; }
+    .skills-grid { grid-template-columns: 1fr; }
+  }
+</style>

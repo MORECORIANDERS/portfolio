@@ -1,0 +1,66 @@
+---
+import { SITE } from '../consts';
+const year = new Date().getFullYear();
+---
+
+<footer class="site-footer">
+  <div class="container footer-inner">
+    <div class="footer-left">
+      <p class="footer-lead serif-italic">有想法或合作意向？</p>
+      <a class="footer-mail link" href={`mailto:${SITE.email}`}>{SITE.email}</a>
+    </div>
+    <nav class="footer-nav" aria-label="页脚导航">
+      <a class="link" href={SITE.github} target="_blank" rel="noopener noreferrer">GitHub ↗</a>
+      <a class="link" href={`mailto:${SITE.email}`}>Email</a>
+    </nav>
+  </div>
+  <div class="container footer-bottom">
+    <span>© {year} {SITE.author}. All rights reserved.</span>
+    <span class="footer-built">Built with Astro · Hosted on GitHub Pages</span>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    border-top: 1px solid var(--line);
+    margin-top: clamp(4rem, 10vw, 9rem);
+    padding-block: clamp(2.5rem, 6vw, 4rem) 2rem;
+    position: relative;
+    z-index: 2;
+  }
+  .footer-inner {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 2rem;
+    flex-wrap: wrap;
+  }
+  .footer-lead {
+    font-size: clamp(1.3rem, 1rem + 1.5vw, 2rem);
+    color: var(--ink-soft);
+    margin-bottom: 0.4rem;
+  }
+  .footer-mail {
+    font-family: var(--font-mono);
+    font-size: 0.9rem;
+    color: var(--ink);
+  }
+  .footer-nav {
+    display: flex;
+    gap: 1.6rem;
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+  }
+  .footer-bottom {
+    margin-top: 2.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--line);
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    flex-wrap: wrap;
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    color: var(--ink-faint);
+  }
+</style>

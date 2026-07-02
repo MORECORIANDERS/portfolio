@@ -1,0 +1,273 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import ProjectCard from '../components/ProjectCard.astro';
+import { getCollection } from 'astro:content';
+import { SITE, STACK } from '../consts';
+
+const projects = (await getCollection('projects')).sort((a, b) => {
+  const o = b.data.order - a.data.order;
+  return o !== 0 ? o : b.data.pubDate.getTime() - a.data.pubDate.getTime();
+});
+
+const featured = projects.filter((p) => p.data.featured);
+const rest = projects.filter((p) => !p.data.featured);
+const grid = [...featured, ...rest];
+---
+
+<BaseLayout>
+  <!-- Hero -->
+  <section class="hero">
+    <div class="hero-glow" aria-hidden="true"></div>
+    <div class="container hero-inner">
+      <p class="eyebrow" data-reveal>项目档案 · Portfolio · {new Date().getFullYear()}</p>
+      <h1 class="hero-title" data-reveal style="--reveal-delay:80ms">
+        构想，<span class="serif-italic accent">落地</span>，<br />再沉淀为<span class="serif-italic accent">作品</span>。
+      </h1>
+      <p class="hero-sub" data-reveal style="--reveal-delay:200ms">
+        我是 {SITE.author}，一名独立开发者与设计实践者。这里收录我亲手做过的项目 ——
+        从一行代码到完整产品，每个都有自己的故事。
+      </p>
+      <div class="hero-actions" data-reveal style="--reveal-delay:320ms">
+        <a class="btn btn--solid" href="#work">浏览作品</a>
+        <a class="btn" href="/about">关于我</a>
+      </div>
+    </div>
+    <div class="hero-cue" aria-hidden="true" data-reveal style="--reveal-delay:500ms">
+      <span>SCROLL</span>
+      <span class="cue-line"></span>
+    </div>
+  </section>
+
+  <!-- 简介 -->
+  <section class="section intro-section">
+    <div class="container intro-grid">
+      <p class="eyebrow" data-reveal>关于</p>
+      <div class="intro-text" data-reveal style="--reveal-delay:80ms">
+        <p>
+          我相信好的作品是<span class="serif-italic">克制</span>与<span class="serif-italic">精确</span>的结果 ——
+          去掉一切多余，让真正重要的东西浮现。这座档案库会持续更新，
+          记录我每一次把想法变成可触碰之物的过程。
+        </p>
+      </div>
+      <dl class="intro-meta" data-reveal style="--reveal-delay:160ms">
+        <div><dt>所在地</dt><dd>{SITE.location}</dd></div>
+        <div><dt>作品数</dt><dd>{String(projects.length).padStart(2, '0')}</dd></div>
+        <div><dt>状态</dt><dd>持续更新中</dd></div>
+      </dl>
+    </div>
+  </section>
+
+  <!-- 作品 -->
+  <section class="section work-section" id="work">
+    <div class="container">
+      <header class="section-head" data-reveal>
+        <p class="eyebrow">Selected Work</p>
+        <h2>精选作品</h2>
+        <p class="section-lead">点击任一项目，进入它的完整介绍页。</p>
+      </header>
+
+      <div class:list={['projects-grid', featured.length > 0 && 'has-featured']}>
+        {grid.map((project, i) => <ProjectCard project={project} index={i} featured={project.data.featured} />)}
+      </div>
+    </div>
+  </section>
+
+  <!-- 技术栈条带 -->
+  <section class="section stack-section">
+    <div class="container" data-reveal>
+      <p class="eyebrow">工具与技术</p>
+    </div>
+    <div class="marquee" aria-hidden="true">
+      <div class="marquee-track">
+        {[...STACK, ...STACK].map((s) => <span class="marquee-item">{s}</span>)}
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  /* Hero */
+  .hero {
+    position: relative;
+    min-height: clamp(560px, 92vh, 880px);
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+    padding-block: 6rem 4rem;
+  }
+  .hero-glow {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    background:
+      radial-gradient(60% 50% at 78% 18%, color-mix(in srgb, var(--accent) 22%, transparent), transparent 70%),
+      radial-gradient(45% 45% at 12% 85%, color-mix(in srgb, var(--accent) 12%, transparent), transparent 70%);
+    filter: blur(10px);
+    pointer-events: none;
+  }
+  .hero-inner {
+    position: relative;
+    z-index: 2;
+    max-width: 980px;
+  }
+  .hero-title {
+    margin: 1.4rem 0 1.8rem;
+    font-size: clamp(2.8rem, 1.4rem + 6vw, 6rem);
+    line-height: 0.98;
+  }
+  .hero-title .accent {
+    color: var(--accent-strong);
+  }
+  .hero-sub {
+    max-width: 52ch;
+    font-size: clamp(1.05rem, 0.95rem + 0.4vw, 1.3rem);
+    color: var(--ink-soft);
+  }
+  .hero-actions {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    margin-top: 2.4rem;
+  }
+  .hero-cue {
+    position: absolute;
+    left: 50%;
+    bottom: 1.6rem;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.6rem;
+    font-family: var(--font-mono);
+    font-size: 0.62rem;
+    letter-spacing: 0.3em;
+    color: var(--ink-faint);
+    z-index: 2;
+  }
+  .cue-line {
+    width: 1px;
+    height: 46px;
+    background: linear-gradient(var(--ink-faint), transparent);
+    animation: cue 2.4s var(--ease) infinite;
+  }
+  @keyframes cue {
+    0% { transform: scaleY(0); transform-origin: top; }
+    50% { transform: scaleY(1); transform-origin: top; }
+    51% { transform: scaleY(1); transform-origin: bottom; }
+    100% { transform: scaleY(0); transform-origin: bottom; }
+  }
+
+  /* 简介 */
+  .intro-section { padding-top: 0; }
+  .intro-grid {
+    display: grid;
+    grid-template-columns: 0.5fr 2fr 1fr;
+    gap: 2.5rem;
+    align-items: start;
+    border-top: 1px solid var(--line);
+    padding-top: clamp(3rem, 6vw, 5rem);
+  }
+  .intro-text p {
+    font-family: var(--font-serif);
+    font-size: clamp(1.4rem, 1.1rem + 1.2vw, 2.1rem);
+    line-height: 1.4;
+    color: var(--ink);
+  }
+  .intro-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 1.1rem;
+  }
+  .intro-meta div {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    border-bottom: 1px solid var(--line);
+    padding-bottom: 0.6rem;
+  }
+  .intro-meta dt {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+  }
+  .intro-meta dd {
+    font-family: var(--font-mono);
+    font-size: 0.82rem;
+    color: var(--ink);
+  }
+
+  /* 作品区 */
+  .section-head {
+    margin-bottom: clamp(2.5rem, 5vw, 4rem);
+    max-width: 640px;
+  }
+  .section-head h2 {
+    margin: 0.8rem 0 0.8rem;
+  }
+  .section-lead {
+    color: var(--ink-soft);
+  }
+  .projects-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: clamp(2rem, 4vw, 3.5rem) clamp(1.5rem, 3vw, 2.8rem);
+  }
+  .projects-grid.has-featured .card.featured {
+    grid-column: 1 / -1;
+  }
+  .projects-grid.has-featured .card.featured :global(.card-media) {
+    aspect-ratio: 21 / 9;
+  }
+
+  /* 技术栈条带 */
+  .stack-section { padding-top: 0; }
+  .marquee {
+    margin-top: 2rem;
+    overflow: hidden;
+    border-block: 1px solid var(--line);
+    -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+    mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+  }
+  .marquee-track {
+    display: flex;
+    width: max-content;
+    gap: 3rem;
+    padding: 1.4rem 0;
+    animation: scroll 32s linear infinite;
+  }
+  .marquee:hover .marquee-track { animation-play-state: paused; }
+  .marquee-item {
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-size: clamp(1.4rem, 1rem + 1.5vw, 2.2rem);
+    color: var(--ink-soft);
+    white-space: nowrap;
+  }
+  .marquee-item::after {
+    content: '✦';
+    margin-left: 3rem;
+    color: var(--accent);
+    font-style: normal;
+    font-size: 0.7em;
+    vertical-align: middle;
+  }
+  @keyframes scroll {
+    to { transform: translateX(-50%); }
+  }
+
+  /* 响应式 */
+  @media (max-width: 900px) {
+    .intro-grid {
+      grid-template-columns: 1fr;
+      gap: 1.6rem;
+    }
+  }
+  @media (max-width: 720px) {
+    .projects-grid {
+      grid-template-columns: 1fr;
+    }
+    .hero-actions .btn { flex: 1; justify-content: center; }
+  }
+</style>

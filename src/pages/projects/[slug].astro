@@ -1,0 +1,373 @@
+---
+import { getCollection, render } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { asset } from '../../utils/path';
+
+export async function getStaticPaths() {
+  const projects = (await getCollection('projects')).sort((a, b) => {
+    const o = b.data.order - a.data.order;
+    return o !== 0 ? o : b.data.pubDate.getTime() - a.data.pubDate.getTime();
+  });
+
+  return projects.map((project, i) => ({
+    params: { slug: project.id },
+    props: {
+      project,
+      prev: projects[i + 1] ?? null,
+      next: projects[i - 1] ?? null,
+    },
+  }));
+}
+
+const { project, prev, next } = Astro.props;
+const { title, description, cover, coverAlt, pubDate, role, tags, stack, demoUrl, repoUrl } =
+  project.data;
+const { Content } = await render(project);
+const year = pubDate.getFullYear();
+const dateStr = pubDate.toLocaleDateString('zh-CN', { year: 'numeric', month: 'long' });
+---
+
+<BaseLayout title={title} description={description} image={asset(cover)}>
+  <article class="project">
+    <!-- 返回 -->
+    <div class="container back-row" data-reveal>
+      <a class="link back-link" href={`${import.meta.env.BASE_URL}#work`}>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 18l-6-6 6-6"/></svg>
+        返回作品
+      </a>
+    </div>
+
+    <!-- 封面 -->
+    <header class="cover" data-reveal>
+      <img class="cover-img" src={asset(cover)} alt={coverAlt} />
+      <div class="cover-shade"></div>
+      <div class="container cover-inner">
+        <p class="eyebrow cover-eyebrow">{dateStr} · {year}</p>
+        <h1 class="cover-title">{title}</h1>
+        <p class="cover-desc">{description}</p>
+        <div class="cover-meta">
+          {role && <span><span class="meta-label">角色</span> {role}</span>}
+          {tags.length > 0 && (
+            <span class="cover-tags">
+              {tags.map((t) => <span class="tag">{t}</span>)}
+            </span>
+          )}
+        </div>
+      </div>
+    </header>
+
+    <!-- 正文 -->
+    <div class="container prose-wrap">
+      <div class="prose" data-reveal>
+        <Content />
+      </div>
+
+      <!-- 侧边信息 -->
+      <aside class="aside" data-reveal style="--reveal-delay:120ms">
+        <div class="aside-block">
+          <p class="eyebrow">技术栈</p>
+          <ul class="stack-list">
+            {stack.map((s) => <li>{s}</li>)}
+          </ul>
+        </div>
+        {demoUrl && (
+          <a class="btn btn--solid aside-btn" href={demoUrl} target="_blank" rel="noopener noreferrer">
+            在线演示 ↗
+          </a>
+        )}
+        {repoUrl && (
+          <a class="btn aside-btn" href={repoUrl} target="_blank" rel="noopener noreferrer">
+            查看源码 ↗
+          </a>
+        )}
+      </aside>
+    </div>
+
+    <!-- 上一篇 / 下一篇 -->
+    <nav class="pager" aria-label="项目导航">
+      <div class="container pager-inner">
+        {prev ? (
+          <a class="pager-link prev" href={`${import.meta.env.BASE_URL}projects/${prev.id}`}>
+            <span class="pager-dir">← 上一篇</span>
+            <span class="pager-title">{prev.data.title}</span>
+          </a>
+        ) : <span class="pager-link placeholder"></span>}
+        {next ? (
+          <a class="pager-link next" href={`${import.meta.env.BASE_URL}projects/${next.id}`}>
+            <span class="pager-dir">下一篇 →</span>
+            <span class="pager-title">{next.data.title}</span>
+          </a>
+        ) : <span class="pager-link placeholder"></span>}
+      </div>
+    </nav>
+  </article>
+</BaseLayout>
+
+<style>
+  .back-row {
+    padding-top: 2rem;
+  }
+  .back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+  }
+
+  /* 封面 */
+  .cover {
+    position: relative;
+    margin-top: 1.5rem;
+    min-height: clamp(420px, 70vh, 680px);
+    display: flex;
+    align-items: flex-end;
+    overflow: hidden;
+    border: 1px solid var(--line);
+  }
+  .cover-img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: 0;
+  }
+  .cover-shade {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    background: linear-gradient(
+      180deg,
+      rgba(0, 0, 0, 0.1) 0%,
+      rgba(0, 0, 0, 0.35) 55%,
+      rgba(0, 0, 0, 0.72) 100%
+    );
+  }
+  .cover-inner {
+    position: relative;
+    z-index: 2;
+    padding-bottom: clamp(2rem, 5vw, 3.5rem);
+    color: #f6f3ee;
+  }
+  .cover-eyebrow {
+    color: rgba(246, 243, 238, 0.7);
+  }
+  .cover-title {
+    color: #fff;
+    font-size: clamp(2.4rem, 1.5rem + 4vw, 4.6rem);
+    margin: 0.6rem 0 0.8rem;
+    max-width: 18ch;
+  }
+  .cover-desc {
+    color: rgba(246, 243, 238, 0.86);
+    max-width: 52ch;
+    font-size: clamp(1rem, 0.95rem + 0.3vw, 1.2rem);
+  }
+  .cover-meta {
+    margin-top: 1.4rem;
+    display: flex;
+    align-items: center;
+    gap: 1.4rem;
+    flex-wrap: wrap;
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    color: rgba(246, 243, 238, 0.8);
+  }
+  .meta-label {
+    color: rgba(246, 243, 238, 0.45);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-size: 0.68rem;
+  }
+  .cover-tags {
+    display: inline-flex;
+    gap: 0.4rem;
+    flex-wrap: wrap;
+  }
+  .cover-tags :global(.tag) {
+    color: rgba(246, 243, 238, 0.9);
+    border-color: rgba(246, 243, 238, 0.3);
+  }
+
+  /* 正文 + 侧栏 */
+  .prose-wrap {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 260px;
+    gap: clamp(2rem, 5vw, 4rem);
+    padding-top: clamp(3rem, 6vw, 5rem);
+    align-items: start;
+  }
+  .prose {
+    max-width: var(--reading);
+  }
+  .prose :global(h2) {
+    margin: 2.6rem 0 1rem;
+    font-size: clamp(1.5rem, 1.2rem + 1vw, 2rem);
+  }
+  .prose :global(h2:first-child) {
+    margin-top: 0;
+  }
+  .prose :global(h3) {
+    margin: 2rem 0 0.6rem;
+    font-size: 1.25rem;
+  }
+  .prose :global(p) {
+    margin: 0 0 1.2rem;
+    color: var(--ink);
+    line-height: 1.8;
+  }
+  .prose :global(ul) {
+    margin: 0 0 1.4rem;
+    padding-left: 1.2rem;
+    list-style: none;
+  }
+  .prose :global(li) {
+    position: relative;
+    padding-left: 0.4rem;
+    margin-bottom: 0.5rem;
+    color: var(--ink);
+  }
+  .prose :global(li)::before {
+    content: '—';
+    position: absolute;
+    left: -1.2rem;
+    color: var(--accent);
+  }
+  .prose :global(a) {
+    color: var(--accent-strong);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    text-decoration-color: var(--line-strong);
+  }
+  .prose :global(a:hover) {
+    text-decoration-color: var(--accent);
+  }
+  .prose :global(blockquote) {
+    margin: 1.6rem 0;
+    padding: 0.4rem 0 0.4rem 1.4rem;
+    border-left: 2px solid var(--accent);
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-size: 1.15rem;
+    color: var(--ink-soft);
+  }
+  .prose :global(img) {
+    margin: 1.8rem 0;
+    border: 1px solid var(--line);
+  }
+  .prose :global(code) {
+    font-family: var(--font-mono);
+    font-size: 0.88em;
+    background: var(--bg-sunken);
+    padding: 0.15em 0.4em;
+    border-radius: 3px;
+  }
+
+  /* 侧栏 */
+  .aside {
+    position: sticky;
+    top: 96px;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+  .aside-block {
+    border-top: 1px solid var(--line);
+    padding-top: 1.2rem;
+  }
+  .stack-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 0.8rem;
+  }
+  .stack-list li {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--ink-soft);
+    padding: 0.3em 0.7em;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+  }
+  .aside-btn {
+    justify-content: center;
+    width: 100%;
+  }
+
+  /* 上一篇/下一篇 */
+  .pager {
+    margin-top: clamp(4rem, 8vw, 7rem);
+    border-top: 1px solid var(--line);
+  }
+  .pager-inner {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    padding-block: clamp(1.8rem, 4vw, 2.8rem);
+  }
+  .pager-link {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    padding: 1rem 0;
+    transition: transform var(--dur) var(--ease), color var(--dur) var(--ease);
+  }
+  .pager-link.next {
+    text-align: right;
+    align-items: flex-end;
+  }
+  .pager-link.placeholder {
+    visibility: hidden;
+  }
+  a.pager-link:hover {
+    transform: translateY(-3px);
+  }
+  .pager-dir {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+  }
+  .pager-title {
+    font-family: var(--font-serif);
+    font-size: 1.15rem;
+    color: var(--ink);
+  }
+  a.pager-link:hover .pager-title {
+    color: var(--accent-strong);
+  }
+
+  @media (max-width: 860px) {
+    .prose-wrap {
+      grid-template-columns: 1fr;
+    }
+    .aside {
+      position: static;
+      order: -1;
+      flex-direction: row;
+      flex-wrap: wrap;
+      align-items: flex-start;
+    }
+    .aside-block {
+      flex: 1 1 100%;
+    }
+    .aside-btn {
+      width: auto;
+      flex: 0 0 auto;
+    }
+  }
+  @media (max-width: 640px) {
+    .pager-inner {
+      grid-template-columns: 1fr;
+    }
+    .pager-link.next {
+      text-align: left;
+      align-items: flex-start;
+    }
+  }
+</style>
