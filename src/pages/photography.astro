@@ -1,17 +1,17 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 
-const images = import.meta.glob<{ default: ImageMetadata }>(
-  '../assets/photography/*.{jpg,jpeg,png,webp,gif}',
+const images = import.meta.glob<ImageMetadata>(
+  '../assets/photography/*.{jpg,JPG,jpeg,JPEG,png,PNG,webp,WEBP,gif,GIF}',
   { eager: true, import: 'default' }
 );
 
 const photos = Object.entries(images)
   .map(([path, mod]) => ({
-    src: mod.default.src,
+    src: mod.src,
     alt: path.split('/').pop()?.replace(/\.[^.]+$/, '').replace(/[-_]/g, ' ') ?? '',
-    width: mod.default.width,
-    height: mod.default.height,
+    width: mod.width,
+    height: mod.height,
   }))
   .sort((a, b) => a.alt.localeCompare(b.alt));
 ---
