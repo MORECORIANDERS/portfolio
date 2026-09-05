@@ -12,6 +12,7 @@ export const SITE = {
 
 export const NAV = [
   { label: '作品', href: '/#work' },
+  { label: '摄影', href: '/photography' },
   { label: '关于', href: '/about' },
 ];
 
