@@ -1,5 +1,6 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import photoMeta from '../data/photo-meta.json';
 
 const images = import.meta.glob<ImageMetadata>(
   '../assets/photography/*.{jpg,JPG,jpeg,JPEG,png,PNG,webp,WEBP,gif,GIF}',
@@ -7,13 +8,19 @@ const images = import.meta.glob<ImageMetadata>(
 );
 
 const photos = Object.entries(images)
-  .map(([path, mod]) => ({
-    src: mod.src,
-    alt: path.split('/').pop()?.replace(/\.[^.]+$/, '').replace(/[-_]/g, ' ') ?? '',
-    width: mod.width,
-    height: mod.height,
-  }))
-  .sort((a, b) => a.alt.localeCompare(b.alt));
+  .map(([path, mod]) => {
+    const filename = path.split('/').pop() ?? '';
+    const stem = filename.replace(/\.[^.]+$/, '');
+    const meta = (photoMeta as Record<string, Record<string, string | number>>)[stem] ?? {};
+    return {
+      src: mod.src,
+      alt: stem.replace(/[-_]/g, ' '),
+      width: mod.width,
+      height: mod.height,
+      meta,
+    };
+  })
+  .sort((a, b) => String(b.meta.date ?? '').localeCompare(String(a.meta.date ?? '')));
 ---
 
 <BaseLayout title="摄影" description="阿城的摄影作品集。">
@@ -34,25 +41,37 @@ const photos = Object.entries(images)
   <section class="section gallery-section">
     <div class="container">
       {photos.length > 0 ? (
-        <div class="gallery-grid">
+        <div class="masonry">
           {photos.map((photo, i) => (
-            <button
-              class="gallery-item"
-              data-lightbox-trigger
-              data-index={i}
-            >
-              <img
-                src={photo.src}
-                alt={photo.alt}
-                loading="lazy"
-                decoding="async"
-                width={photo.width}
-                height={photo.height}
-              />
-              <span class="gallery-overlay">
-                <span class="gallery-caption">{photo.alt}</span>
-              </span>
-            </button>
+            <div class="masonry-item">
+              <button
+                class="gallery-card"
+                data-lightbox-trigger
+                data-index={i}
+              >
+                <img
+                  src={photo.src}
+                  alt={photo.alt}
+                  loading="lazy"
+                  decoding="async"
+                  width={photo.width}
+                  height={photo.height}
+                />
+              </button>
+              {photo.meta.camera && (
+                <p class="photo-meta">
+                  <span class="meta-date">{photo.meta.date}</span>
+                  <span class="meta-sep">·</span>
+                  <span>{photo.meta.camera}</span>
+                  {photo.meta.focal && (
+                    <>
+                      <span class="meta-sep">·</span>
+                      <span>{photo.meta.focal} {photo.meta.aperture} {photo.meta.shutter} {photo.meta.iso}</span>
+                    </>
+                  )}
+                </p>
+              )}
+            </div>
           ))}
         </div>
       ) : (
@@ -174,53 +193,53 @@ const photos = Object.entries(images)
     max-width: 40ch;
   }
 
-  /* Gallery Grid */
+  /* Masonry */
   .gallery-section { padding-top: clamp(2rem, 5vw, 4rem); }
-  .gallery-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: clamp(0.75rem, 2vw, 1.2rem);
+  .masonry {
+    columns: 3;
+    column-gap: clamp(0.75rem, 2vw, 1.2rem);
   }
-  .gallery-item {
-    position: relative;
-    overflow: hidden;
+  .masonry-item {
+    break-inside: avoid;
+    margin-bottom: clamp(0.75rem, 2vw, 1.2rem);
+  }
+  .gallery-card {
+    display: block;
+    width: 100%;
     border: none;
     padding: 0;
     background: var(--bg-sunken);
     cursor: pointer;
-    aspect-ratio: 4 / 3;
+    overflow: hidden;
+    line-height: 0;
   }
-  .gallery-item img {
+  .gallery-card img {
     width: 100%;
-    height: 100%;
-    object-fit: cover;
+    height: auto;
+    display: block;
     transition: transform 0.6s var(--ease), filter 0.45s var(--ease);
     filter: saturate(0.95);
   }
-  .gallery-item:hover img {
-    transform: scale(1.05);
+  .gallery-card:hover img {
+    transform: scale(1.03);
     filter: saturate(1.05);
   }
-  .gallery-overlay {
-    position: absolute;
-    inset: 0;
-    display: flex;
-    align-items: flex-end;
-    padding: 1rem;
-    background: linear-gradient(transparent 50%, rgba(0, 0, 0, 0.55));
-    opacity: 0;
-    transition: opacity 0.4s var(--ease);
-    pointer-events: none;
-  }
-  .gallery-item:hover .gallery-overlay {
-    opacity: 1;
-  }
-  .gallery-caption {
+
+  /* Photo meta */
+  .photo-meta {
+    margin-top: 0.5rem;
     font-family: var(--font-mono);
-    font-size: 0.75rem;
-    letter-spacing: 0.04em;
-    color: rgba(255, 255, 255, 0.9);
-    text-transform: capitalize;
+    font-size: 0.68rem;
+    letter-spacing: 0.03em;
+    color: var(--ink-faint);
+    line-height: 1.5;
+  }
+  .meta-date {
+    color: var(--ink-soft);
+  }
+  .meta-sep {
+    margin: 0 0.3em;
+    opacity: 0.4;
   }
 
   /* Empty state */
@@ -314,11 +333,11 @@ const photos = Object.entries(images)
     color: rgba(255, 255, 255, 0.5);
   }
 
-  @media (max-width: 640px) {
-    .gallery-grid {
-      grid-template-columns: repeat(2, 1fr);
-      gap: 0.5rem;
-    }
+  @media (max-width: 900px) {
+    .masonry { columns: 2; }
+  }
+  @media (max-width: 540px) {
+    .masonry { columns: 1; }
     .lightbox-prev,
     .lightbox-next {
       padding: 0.6rem;
@@ -328,13 +347,7 @@ const photos = Object.entries(images)
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .gallery-item {
-      transition-duration: 0.01ms;
-      opacity: 1;
-      transform: none;
-    }
-    .gallery-item img { transition-duration: 0.01ms; }
-    .gallery-overlay { transition-duration: 0.01ms; }
+    .gallery-card img { transition-duration: 0.01ms; }
     .lightbox { transition-duration: 0.01ms; }
   }
 </style>

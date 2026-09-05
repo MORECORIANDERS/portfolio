@@ -1,0 +1,79 @@
+{
+  "BS0A9306": {
+    "date": "2025.08",
+    "camera": "Canon EOS R6m2",
+    "lens": "50F1.8R DF",
+    "focal": "50mm",
+    "aperture": "f/2.0",
+    "shutter": "1/200s",
+    "iso": "ISO 3200",
+    "width": 6000,
+    "height": 4000
+  },
+  "BS0A9673": {
+    "date": "2025.08",
+    "camera": "Canon EOS R6m2",
+    "lens": "50F1.8R DF",
+    "focal": "50mm",
+    "aperture": "f/2.8",
+    "shutter": "1/60s",
+    "iso": "ISO 1000",
+    "width": 6000,
+    "height": 4000
+  },
+  "DSC04713": {
+    "date": "2025.02",
+    "camera": "SONY ILCE-6000",
+    "lens": "E PZ 16-50mm F3.5-5.6 OSS",
+    "focal": "63mm",
+    "aperture": "f/5.6",
+    "shutter": "1/500s",
+    "iso": "ISO 200",
+    "width": 6000,
+    "height": 3376
+  },
+  "DSC04719": {
+    "date": "2025.02",
+    "camera": "SONY ILCE-6000",
+    "lens": "E PZ 16-50mm F3.5-5.6 OSS",
+    "focal": "63mm",
+    "aperture": "f/5.6",
+    "shutter": "1/40s",
+    "iso": "ISO 200",
+    "width": 6000,
+    "height": 3376
+  },
+  "DSC04723": {
+    "date": "2025.02",
+    "camera": "SONY ILCE-6000",
+    "lens": "E PZ 16-50mm F3.5-5.6 OSS",
+    "focal": "63mm",
+    "aperture": "f/5.6",
+    "shutter": "1/200s",
+    "iso": "ISO 200",
+    "width": 6000,
+    "height": 3376
+  },
+  "DSC04813": {
+    "date": "2025.04",
+    "camera": "SONY ILCE-6000",
+    "lens": "E PZ 16-50mm F3.5-5.6 OSS",
+    "focal": "28mm",
+    "aperture": "f/4.0",
+    "shutter": "1/320s",
+    "iso": "ISO 100",
+    "width": 6000,
+    "height": 3376
+  },
+  "DSC04850": {
+    "date": "2025.04",
+    "camera": "SONY ILCE-6000",
+    "lens": "E PZ 16-50mm F3.5-5.6 OSS",
+    "focal": "75mm",
+    "aperture": "f/5.6",
+    "shutter": "1/125s",
+    "iso": "ISO 100",
+    "width": 6000,
+    "height": 3376
+  }
+}
