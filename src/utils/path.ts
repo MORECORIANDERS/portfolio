@@ -4,5 +4,11 @@ const BASE = import.meta.env.BASE_URL;
 /** 将 frontmatter 中的资源路径转换为带 base 的最终路径 */
 export function asset(path: string): string {
   const clean = path.replace(/^\/+/, '');
-  return `${BASE}${clean}`;
+  const base = BASE.endsWith('/') ? BASE : `${BASE}/`;
+  return `${base}${clean}`;
+}
+
+/** 返回带尾部斜杠的 base 路径 */
+export function basePath(): string {
+  return BASE.endsWith('/') ? BASE : `${BASE}/`;
 }

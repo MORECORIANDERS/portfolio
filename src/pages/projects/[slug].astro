@@ -1,7 +1,7 @@
 ---
 import { getCollection, render } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import { asset } from '../../utils/path';
+import { asset, basePath } from '../../utils/path';
 
 export async function getStaticPaths() {
   const projects = (await getCollection('projects')).sort((a, b) => {
@@ -31,7 +31,7 @@ const dateStr = pubDate.toLocaleDateString('zh-CN', { year: 'numeric', month: 'l
   <article class="project">
     <!-- 返回 -->
     <div class="container back-row" data-reveal>
-      <a class="link back-link" href={`${import.meta.env.BASE_URL}#work`}>
+      <a class="link back-link" href={`${basePath()}#work`}>
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 18l-6-6 6-6"/></svg>
         返回作品
       </a>
@@ -87,13 +87,13 @@ const dateStr = pubDate.toLocaleDateString('zh-CN', { year: 'numeric', month: 'l
     <nav class="pager" aria-label="项目导航">
       <div class="container pager-inner">
         {prev ? (
-          <a class="pager-link prev" href={`${import.meta.env.BASE_URL}projects/${prev.id}`}>
+          <a class="pager-link prev" href={`${basePath()}projects/${prev.id}`}>
             <span class="pager-dir">← 上一篇</span>
             <span class="pager-title">{prev.data.title}</span>
           </a>
         ) : <span class="pager-link placeholder"></span>}
         {next ? (
-          <a class="pager-link next" href={`${import.meta.env.BASE_URL}projects/${next.id}`}>
+          <a class="pager-link next" href={`${basePath()}projects/${next.id}`}>
             <span class="pager-dir">下一篇 →</span>
             <span class="pager-title">{next.data.title}</span>
           </a>

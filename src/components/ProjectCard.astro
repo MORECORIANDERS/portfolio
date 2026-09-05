@@ -1,6 +1,6 @@
 ---
 import type { CollectionEntry } from 'astro:content';
-import { asset } from '../utils/path';
+import { asset, basePath } from '../utils/path';
 
 interface Props {
   project: CollectionEntry<'projects'>;
@@ -10,7 +10,7 @@ interface Props {
 
 const { project, index = 0, featured = false } = Astro.props;
 const { title, description, cover, coverAlt, tags, pubDate, role } = project.data;
-const href = `${import.meta.env.BASE_URL}projects/${project.id}`;
+const href = `${basePath()}projects/${project.id}`;
 const year = pubDate.getFullYear();
 ---
 
